@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 export default class Mongo {
     static async connect(){
-        const str = process.env.HERO_DB.toString()
+        const str = process.env.USER_DB.toString()
         const opt = {
             useNewUrlParser: true,
             useUnifiedTopology: true
