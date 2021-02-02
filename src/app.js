@@ -1,6 +1,5 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
-// import MongoStore from 'connect-mongo'(session)
 import express from 'express'
 import session from 'express-session'
 import dotenv from 'dotenv'
