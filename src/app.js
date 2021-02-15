@@ -3,6 +3,7 @@ import 'regenerator-runtime/runtime'
 import express from 'express'
 import session from 'express-session'
 import dotenv from 'dotenv'
+import passport from 'passport'
 import Mongo from './services/mongo'
 import router from './routes'
 
@@ -19,7 +20,8 @@ app.use(
   })
 )
 app.use(express.json())
-
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(router)
 
 Mongo.connect()
