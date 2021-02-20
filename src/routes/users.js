@@ -1,8 +1,12 @@
 import { Router } from 'express'
-import { Auth } from '../controllers/auth'
+import { Users } from '../controllers/user'
 
 const userRoute = Router()
 
-userRoute.post('/', Auth.SIGNUP)
+userRoute.post('/', Users.SIGNUP)
+
+userRoute.post('/login', Users.LOGIN)
+
+userRoute.patch('/:id', Users.UPDATE)
 
 export default userRoute
