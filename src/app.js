@@ -19,6 +19,9 @@ app.use(
     saveUninitialized: true // guarda en la db ese obj
   })
 )
+// app.use((req, res, next) => {
+//   res.status(503).send({ message: 'Database is being updated. Try it later.' })
+// })
 app.use(express.json())
 app.use(passport.initialize())
 app.use(passport.session())

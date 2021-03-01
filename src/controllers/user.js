@@ -16,11 +16,9 @@ export class Users {
         email: userReq.email,
         password: userReq.password
       })
+      const token = await user.generateAuthToken()
 
-      const lastUser = await user.save()
-      const token = await lastUser.generateAuthToken()
-
-      res.send(lastUser, token)
+      res.send({ user, token })
     } catch (error) {
       res.status(400).send({ message: 'An error ocurred', error: error })
     }
@@ -28,11 +26,9 @@ export class Users {
 
   static async LOGIN(req, res) {
     try {
-      const isValidAccount = await User.comparePassword(
-        req.body.email,
-        req.body.password
-      )
-      res.send(isValidAccount)
+      const user = await User.comparePassword(req.body.email, req.body.password)
+      const token = await user.generateAuthToken()
+      res.send({ user, token })
     } catch (error) {
       res.status(401).send()
     }
@@ -59,6 +55,22 @@ export class Users {
       res.send('The user was updated correctly')
     } catch (error) {
       res.status(400).send()
+    }
+  }
+
+  // static async GET(req, res) {
+  //   try {
+  //     const users = await User.find()
+  //     res.send(users)
+  //   } catch (error) {
+  //     res.status(500).send()
+  //   }
+  // }
+  static async GET(req, res) {
+    try {
+      res.send(req.user)
+    } catch (error) {
+      res.status(500).send()
     }
   }
 }

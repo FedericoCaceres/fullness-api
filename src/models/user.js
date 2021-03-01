@@ -18,7 +18,15 @@ const userSchema = new Schema(
     },
     password: {
       type: String
-    } //,
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true
+        }
+      }
+    ] //,
     // hobbies: [
     //   {
     //     name: {
@@ -52,7 +60,6 @@ userSchema.pre('save', async function () {
   if (!user.isModified('password')) {
     return
   }
-
   const hashedPassword = await bcrypt.hash(user.password, 8)
   user.password = hashedPassword
 })
@@ -60,9 +67,11 @@ userSchema.pre('save', async function () {
 userSchema.methods.generateAuthToken = async function () {
   const user = this
   const secretKey = process.env.SECRET.toString()
-
   const token = jwt.sign({ _id: user._id.toString() }, secretKey)
-  console.log('ESTE ES EL TOKEN: ', token)
+
+  await user.tokens.push({ token })
+  await user.save()
+
   return token
 }
 
@@ -73,7 +82,12 @@ userSchema.statics.comparePassword = async (email, password) => {
   }
 
   const isMatch = await bcrypt.compare(password, user.password)
-  return isMatch
+
+  if (!isMatch) {
+    throw new Error('Unable to login')
+  }
+
+  return user
 }
 
 export const User = mongoose.model('user', userSchema, 'users')
